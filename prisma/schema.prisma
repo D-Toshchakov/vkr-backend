@@ -16,10 +16,10 @@ enum UserRole {
 }
 
 model User {
-  id Int @id @default(autoincrement())
+  id String @id @default(uuid())
   
   email String @unique
-  password String
+  hash String
 
   name String
   
@@ -27,6 +27,10 @@ model User {
 
   role UserRole @default(USER)
 
+  hashedRt String?
+
   createdAt DateTime @default(now()) @map("created_at")
   updatedAt DateTime @updatedAt @map("updated_at")
+
+  @@map("users")
 }

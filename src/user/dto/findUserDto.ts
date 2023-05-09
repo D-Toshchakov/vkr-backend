@@ -1,8 +1,8 @@
-import { IsEmail, IsNumber, IsString } from "class-validator"
+import { IsEmail, IsString } from "class-validator"
 
 export class findUserDto {
-    @IsNumber()
-    id?: number
+    @IsString()
+    id?: string
 
     @IsEmail()
     @IsString()
