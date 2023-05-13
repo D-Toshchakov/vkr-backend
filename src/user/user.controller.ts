@@ -1,6 +1,6 @@
 import { Controller, Get,  UseGuards } from '@nestjs/common';
 import { UserService } from './user.service';
-import { GetUser, Roles } from 'src/common/decorators';
+import { GetUser, PublicRoute, Roles } from 'src/common/decorators';
 import { User } from '@prisma/client';
 import { RolesGuard } from 'src/common/guards';
 
@@ -10,6 +10,8 @@ export class UserController {
 
     @Get('me')
     getMe(@GetUser() user: User) {
+        console.log('LOG',user);
+        
         return user
     }
 

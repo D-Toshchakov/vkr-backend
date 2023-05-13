@@ -6,6 +6,7 @@ import { Tokens } from './types';
 import { GetUser, GetUserId, PublicRoute } from '../common/decorators';
 import { RtGuard, AtGuard } from '../common/guards';
 import { Request } from 'express';
+import { User } from '@prisma/client';
 
 @Controller('auth')
 export class AuthController {
@@ -21,7 +22,7 @@ export class AuthController {
     @PublicRoute()
     @HttpCode(HttpStatus.OK)
     @Post('signin')
-    signIn(@Body() dto: signinDto): Promise<Tokens> {
+    signIn(@Body() dto: signinDto) {
         return this.authService.signin(dto);
     }
 

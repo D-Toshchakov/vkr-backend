@@ -2,7 +2,7 @@ import { ForbiddenException, Injectable } from '@nestjs/common';
 import { jwtDto, signinDto, signupDto } from './dto';
 import { PrismaService } from 'src/prisma/prisma.service';
 import * as argon from 'argon2'
-import { Prisma, UserRole } from '@prisma/client';
+import { Prisma, User, UserRole } from '@prisma/client';
 import { JwtService } from '@nestjs/jwt';
 import { ConfigService } from '@nestjs/config';
 import { Tokens } from './types';
@@ -45,7 +45,7 @@ export class AuthService {
         }
     }
 
-    async signin(dto: signinDto): Promise<Tokens> {
+    async signin(dto: signinDto) {
         // find the user by email
         const user = await this.prisma.user.findUnique({
             where: { email: dto.email },
@@ -64,7 +64,14 @@ export class AuthService {
 
         const tokens = await this.signTokens(user.id, user.email, user.role)
         await this.updateRtHash(user.id, tokens.refresh_token)
-        return tokens
+        
+        return {
+            id: user.id,
+            name: user.name,
+            email: user.email,
+            role: user.role,
+            ...tokens,
+        }
     }
 
     async logout(userId: string) {

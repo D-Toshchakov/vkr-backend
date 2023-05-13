@@ -9,6 +9,7 @@ async function bootstrap() {
       whitelist: true
   }));
   app.useGlobalGuards()
+  app.enableCors()
   await app.listen(8000);
 }
 bootstrap();
