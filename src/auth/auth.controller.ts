@@ -1,12 +1,8 @@
 import { Body, Controller, HttpCode, HttpStatus, Post, Req, UseGuards } from '@nestjs/common';
 import { AuthService } from './auth.service';
-import { signupDto } from './dto/signup.dto';
-import { signinDto } from './dto';
-import { Tokens } from './types';
-import { GetUser, GetUserId, PublicRoute } from '../common/decorators';
-import { RtGuard, AtGuard } from '../common/guards';
-import { Request } from 'express';
-import { User } from '@prisma/client';
+import { signinDto, signupDto } from './dto';
+import { GetUser, PublicRoute } from '../common/decorators';
+import { RtGuard } from '../common/guards';
 
 @Controller('auth')
 export class AuthController {
@@ -14,21 +10,21 @@ export class AuthController {
 
     @PublicRoute()
     @HttpCode(HttpStatus.CREATED)
-    @Post('signup')
-    signUp(@Body() dto: signupDto): Promise<Tokens> {
-        return this.authService.signup(dto);
+    @Post('register')
+    signUp(@Body() dto: signupDto) {
+        return this.authService.register(dto);
     }
 
     @PublicRoute()
     @HttpCode(HttpStatus.OK)
-    @Post('signin')
+    @Post('login')
     signIn(@Body() dto: signinDto) {
-        return this.authService.signin(dto);
+        return this.authService.login(dto);
     }
 
     @HttpCode(HttpStatus.OK)
     @Post('logout')
-    logout(@GetUserId() userId: string) {
+    logout(@GetUser('id') userId: number) {
         return this.authService.logout(userId);
     }
 
@@ -37,10 +33,10 @@ export class AuthController {
     @HttpCode(HttpStatus.OK)
     @Post('refresh')
     refreshToken(
-        @GetUserId() userId: string,
-        @GetUser('refreshToken') refreshToken: string
+        @GetUser('id') userId: number,
+        // @GetUser('') refreshToken: string
     ) {
         
-        return this.authService.refreshTokens(userId, refreshToken);
+        // return this.a uthService.refreshTokens(userId, refreshToken);
     }
 }

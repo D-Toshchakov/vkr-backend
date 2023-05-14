@@ -27,9 +27,6 @@ export class RtStrategy extends PassportStrategy(Strategy, 'jwt-refresh') {
             },
         })
 
-        delete user.hash
-        delete user.hashedRt
-
         const refreshToken = req.get('Authorization').replace('Bearer', '').trim()
         return { ...user, refreshToken };
     }

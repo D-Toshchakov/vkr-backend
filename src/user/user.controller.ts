@@ -1,19 +1,24 @@
-import { Controller, Get,  UseGuards } from '@nestjs/common';
+import { Controller, Get,  HttpCode,  HttpStatus,  Put,  UseGuards } from '@nestjs/common';
 import { UserService } from './user.service';
-import { GetUser, PublicRoute, Roles } from 'src/common/decorators';
-import { User } from '@prisma/client';
+import { GetUserId, Roles } from 'src/common/decorators';
 import { RolesGuard } from 'src/common/guards';
 
 @Controller('user')
 export class UserController {
     constructor(private userService: UserService) {}
 
-    @Get('me')
-    getMe(@GetUser() user: User) {
-        console.log('LOG',user);
+    @Get('profile')
+    getProfile(@GetUserId() id: number) {
         
-        return user
+        // return this.userService.getUserById(id)
     }
+
+    @HttpCode(HttpStatus.OK)
+    @Put('profile')
+    updateProfile() {
+
+    }
+
 
     @UseGuards(RolesGuard)
     @Roles('ADMIN')

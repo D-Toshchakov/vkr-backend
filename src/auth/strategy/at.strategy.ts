@@ -25,9 +25,6 @@ export class AtStrategy extends PassportStrategy(Strategy, 'jwt') {
             },
         })
 
-        delete user.hash
-        delete user.hashedRt
-
         return user;
     }
 }
