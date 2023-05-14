@@ -1,6 +1,6 @@
 import { IsEmail, IsNotEmpty, IsOptional, IsString } from "class-validator"
 
-export class updateUserDto {
+export class UpdateUserDto {
     @IsEmail()
     email: string
 
@@ -16,6 +16,8 @@ export class updateUserDto {
     @IsString()
     avatarPath: string
 
-    
+    @IsOptional()
+    @IsString()
+    phone: string    
 
 }

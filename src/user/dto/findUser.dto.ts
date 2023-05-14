@@ -1,11 +1,8 @@
 import { IsEmail, IsString } from "class-validator"
 
-export class findUserDto {
+export class FindUserDto {
     id?: number
 
     @IsEmail()
     email?: string
-
-    @IsString()
-    name?: string
 }

@@ -1,5 +1,5 @@
 import { ForbiddenException, Injectable } from '@nestjs/common';
-import { jwtDto, signinDto, signupDto } from './dto';
+import { jwtDto, signinDto, signupDto, returnUserHashObject } from './dto';
 import { PrismaService } from 'src/prisma/prisma.service';
 import * as argon from 'argon2'
 import { Prisma, User, UserRole } from '@prisma/client';
@@ -51,12 +51,12 @@ export class AuthService {
     }
 
     async login(dto: signinDto) {
-        
-        const user = await this.validateUser(dto.email,dto.password)
+
+        const user = await this.validateUser(dto.email, dto.password)
         const tokens = await this.signTokens(user.id, user.role)
 
         await this.updateRtHash(user.id, tokens.refresh_token)
-        
+
         return {
             user: this.returnUserFields(user),
             ...tokens
@@ -74,20 +74,20 @@ export class AuthService {
     }
 
     async refreshTokens(userId: number, rt: string) {
-        const user = await this.userService.findOne({id: userId})
+        const user = await this.userService.findOne({ id: userId }, {})
         // if user does not exist throw exception
         if (!user || !user.hashedRt) {
             throw new ForbiddenException('Access denied');
         }
 
         const rtSecret = this.config.get('RT_SECRET')
-        
+
         // compare refresh token
         const [rtMatches, isValid] = await Promise.all([
             await argon.verify(user.hashedRt, rt),
-            await this.jwt.verifyAsync(rt, {secret:rtSecret})
+            await this.jwt.verifyAsync(rt, { secret: rtSecret })
         ])
-        
+
         // if refresh token is incorrect throw exception
         if (!rtMatches && isValid) {
             throw new ForbiddenException('Access denied');
@@ -136,24 +136,25 @@ export class AuthService {
 
     private async validateUser(email: string, password: string) {
         // find the user by email
-        const user = await this.userService.findOne({email})
+        const user = await this.userService.findOne({ email }, returnUserHashObject)
 
         // if user does not exist throw exception
         if (!user) {
             throw new ForbiddenException('Credentials incorrect');
         }
 
-        // compare password
-        const pwMatches = await argon.verify(user.hash, password)
-        // if password is incorrect throw exception
-        if (!pwMatches) {
-            throw new ForbiddenException('Credentials incorrect');
-        };
-
+        if (user) {
+            // compare password
+            const pwMatches = await argon.verify(user.hash, password)
+            // if password is incorrect throw exception
+            if (!pwMatches) {
+                throw new ForbiddenException('Credentials incorrect');
+            };
+        }
         return user
     }
 
-    private returnUserFields(user: User) {
+    private returnUserFields(user: Partial<User>) {
         return {
             id: user.id,
             email: user.email,

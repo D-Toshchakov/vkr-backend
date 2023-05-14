@@ -27,18 +27,17 @@ model User {
   email      String   @unique
   hash       String
   name       String
-  avatarPath String   @default("uploads/default-avatar.png") @map("avatar_path")
   role       UserRole @default(USER)
-  hashedRt   String?
   phone      String   @default("")
+  hashedRt   String?
+  avatarPath String   @default("uploads/default-avatar.png") @map("avatar_path")
 
   createdAt DateTime @default(now()) @map("created_at")
   updatedAt DateTime @updatedAt @map("updated_at")
 
-  orders  Order[]
-  reviews Review[]
-
-  // @@map("users")
+  orders    Order[]
+  reviews   Review[]
+  favorites Product[]
 }
 
 model Product {
@@ -57,6 +56,9 @@ model Product {
 
   orderItems OrderItem[]
   reviews    Review[]
+
+  user   User? @relation(fields: [userId], references: [id])
+  userId Int?  @map("user_id")
 }
 
 model Category {
