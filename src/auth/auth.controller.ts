@@ -1,4 +1,4 @@
-import { Body, Controller, HttpCode, HttpStatus, Post, Req, UseGuards } from '@nestjs/common';
+import { Body, Controller, HttpCode, HttpStatus, Post, UseGuards } from '@nestjs/common';
 import { AuthService } from './auth.service';
 import { signinDto, signupDto } from './dto';
 import { GetUser, PublicRoute } from '../common/decorators';
@@ -34,9 +34,8 @@ export class AuthController {
     @Post('refresh')
     refreshToken(
         @GetUser('id') userId: number,
-        // @GetUser('') refreshToken: string
+        @GetUser('refreshToken') rt: string,
     ) {
-        
-        // return this.a uthService.refreshTokens(userId, refreshToken);
+        return this.authService.refreshTokens(userId, rt);
     }
 }

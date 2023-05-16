@@ -74,7 +74,7 @@ export class AuthService {
     }
 
     async refreshTokens(userId: number, rt: string) {
-        const user = await this.userService.findOne({ id: userId }, {})
+        const user = await this.userService.findOne({ id: userId }, { hashedRt: true })
         // if user does not exist throw exception
         if (!user || !user.hashedRt) {
             throw new ForbiddenException('Access denied');
