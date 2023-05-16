@@ -1,5 +1,5 @@
 import { ForbiddenException, Injectable } from '@nestjs/common';
-import { jwtDto, signinDto, signupDto, returnUserHashObject } from './dto';
+import { jwtDto, returnUserHashObject, signinDto, signupDto } from './dto';
 import { PrismaService } from 'src/prisma/prisma.service';
 import * as argon from 'argon2'
 import { Prisma, User, UserRole } from '@prisma/client';
