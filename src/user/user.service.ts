@@ -73,7 +73,7 @@ export class UserService {
             where: { id },
             data: {
                 favorites: {
-                    [isListed ? "disconnect" : "connect"]: { id: +productId }
+                    [isListed ? "disconnect" : "connect"]: { id: productId }
                 }
             }
         })

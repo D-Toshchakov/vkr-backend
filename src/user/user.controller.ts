@@ -1,4 +1,4 @@
-import { Body, Controller, Get, HttpCode, HttpStatus, Param, Patch, Put, UseGuards } from '@nestjs/common';
+import { Body, Controller, Get, HttpCode, HttpStatus, Param, ParseIntPipe, Patch, Put, UseGuards } from '@nestjs/common';
 import { UserService } from './user.service';
 import { GetUser, Roles } from 'src/common/decorators';
 import { RolesGuard } from 'src/common/guards';
@@ -22,14 +22,14 @@ export class UserController {
         return this.userService.updateProfile(id, dto)
     }
 
-    @HttpCode(HttpStatus.OK)
-    @Patch('profile/favorites/:productId')
-    async toggleFavorite(
-        @GetUser("id") id: number,
-        @Param('productId') prouctId: number
-    ) {
-        return this.userService.toggleFavorite(id, prouctId)
-    }
+    // @HttpCode(HttpStatus.OK)
+    // @Patch('profile/favorites/:productId')
+    // async toggleFavorite(
+    //     @GetUser("id") id: number,
+    //     @Param('productId', ParseIntPipe) prouctId: number
+    // ) {
+    //     return this.userService.toggleFavorite(id, prouctId)
+    // }
 
 
     @UseGuards(RolesGuard)

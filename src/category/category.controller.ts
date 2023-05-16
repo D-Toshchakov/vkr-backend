@@ -1,4 +1,4 @@
-import { Body, Controller, Get, HttpCode, HttpStatus, Param, Post, Put } from '@nestjs/common';
+import { Body, Controller, Get, HttpCode, HttpStatus, Param, ParseIntPipe, Post, Put } from '@nestjs/common';
 import { CategoryService } from './category.service';
 import { CategoryDto } from './dto';
 
@@ -17,8 +17,8 @@ export class CategoryController {
   }
 
   @Get(':id')
-  async getById(@Param('id') id: number) {
-    return this.categoryService.findOne({ id: +id });
+  async getById(@Param('id', ParseIntPipe) id: number) {
+    return this.categoryService.findOne({ id });
   }
 
   @HttpCode(HttpStatus.CREATED)
@@ -31,16 +31,8 @@ export class CategoryController {
   @Put(':id')
   async updateCategory(
     @Body() dto: CategoryDto,
-    @Param('id') id: number
+    @Param('id', ParseIntPipe) id: number
   ) {
-    return this.categoryService.updateCategory(+id, dto)
+    return this.categoryService.updateCategory(id, dto)
   }
-
-  // @HttpCode(HttpStatus.OK)
-  // @Delete(':id')
-  // async deleteCategory(
-  //   @Param('id') id: number
-  // ) {
-  //   return this.categoryService.deleteCategory(+id)
-  // }
 }

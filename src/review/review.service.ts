@@ -7,8 +7,12 @@ import { ReviewDto, returnReviewObject } from './dto';
 export class ReviewService {
     constructor(private prisma: PrismaService) { }
 
-
     async createReview(dto: ReviewDto, userId: number) {
+        const product = await this.prisma.product.findUnique({ where: { id: dto.productId } })
+        if (!product) {
+            throw new NotFoundException('Product not found')
+        }
+
         return this.prisma.review.create({
             data: {
                 rating: dto.rating,
