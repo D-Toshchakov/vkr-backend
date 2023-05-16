@@ -32,6 +32,10 @@ export class ReviewService {
             where: { productId },
             _avg: { rating: true }
         }).then((data) => data._avg)
+        
+        if (!avgRating.rating) {
+            throw new NotFoundException('Product not found')
+        }
 
         return avgRating
     }

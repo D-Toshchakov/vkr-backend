@@ -8,7 +8,7 @@ export class ReviewController {
   constructor(private readonly reviewService: ReviewService) { }
 
   @Get('average/:productId')
-  async getAllReviews(
+  async getAverageRating(
     @Param("productId", ParseIntPipe) prodId: number
   ) {
     return this.reviewService.getAverageRatingByProductId(prodId);
@@ -23,7 +23,7 @@ export class ReviewController {
   @Post()
   async createReview(
     @Body() dto: ReviewDto,
-    @GetUser('id', ParseIntPipe) id: number
+    @GetUser('id') id: number
   ) {
     return this.reviewService.createReview(dto, id)
   }
