@@ -1,6 +1,6 @@
-import { Body, Controller, Get, HttpCode, HttpStatus, Param, Put } from '@nestjs/common';
+import { Body, Controller, Get, HttpCode, HttpStatus, Param, Post, Put } from '@nestjs/common';
 import { CategoryService } from './category.service';
-import { UpdateCategoryDto } from './dto';
+import { CategoryDto } from './dto';
 
 @Controller('category')
 export class CategoryController {
@@ -11,17 +11,26 @@ export class CategoryController {
     return this.categoryService.getAll();
   }
 
+  @Get('slug/:slug')
+  async getBySlug(@Param('slug') slug: string) {
+    return this.categoryService.findOne({ slug })
+  }
+
+  @Get(':id')
+  async getById(@Param('id') id: number) {
+    return this.categoryService.findOne({ id: +id });
+  }
+
   @HttpCode(HttpStatus.CREATED)
-  @Put()
-  async createCategory(
-  ) {
+  @Post()
+  async createCategory() {
     return this.categoryService.createCategory()
   }
 
   @HttpCode(HttpStatus.OK)
   @Put(':id')
   async updateCategory(
-    @Body() dto: UpdateCategoryDto,
+    @Body() dto: CategoryDto,
     @Param('id') id: number
   ) {
     return this.categoryService.updateCategory(+id, dto)

@@ -1,6 +1,6 @@
 import { Injectable, NotFoundException } from '@nestjs/common';
 import { PrismaService } from 'src/prisma/prisma.service';
-import { FindCategoryDto, returnCategoryObject, UpdateCategoryDto } from './dto';
+import { FindCategoryDto, returnCategoryObject, CategoryDto } from './dto';
 import { slugify } from 'src/utils/slugify';
 
 @Injectable()
@@ -39,15 +39,13 @@ export class CategoryService {
         return category
     }
 
-    async updateCategory(id: number, dto: UpdateCategoryDto) {
-        const category = await this.prisma.category.findFirst({
-            where: {
-                name: { equals: dto.name },
-            },
+    async updateCategory(id: number, dto: CategoryDto) {
+        const category = await this.prisma.category.findUnique({
+            where: { id },
         })
 
-        if (category) {
-            throw new Error('Category already exist')
+        if (!category) {
+            throw new NotFoundException('Category not found')
         }
 
         return this.prisma.category.update({
@@ -58,11 +56,5 @@ export class CategoryService {
             }
         })
     }
-
-    // async deleteCategory(id: number) {
-    //     return this.prisma.category.delete({
-    //         where: { id },
-    //     })
-    // }
 }
 

@@ -1,4 +1,4 @@
-import { Injectable, NotFoundException } from '@nestjs/common';
+import { BadRequestException, Injectable, NotFoundException } from '@nestjs/common';
 import { PrismaService } from 'src/prisma/prisma.service';
 import { FindUserDto, UpdateUserDto, returnUserObject } from './dto/';
 import { Prisma } from '@prisma/client';
@@ -44,7 +44,7 @@ export class UserService {
         if (user && id !== user.id) {
             // user with email from dto already exists
             // but it is not the same user
-            throw new Error('Email is taken')
+            throw new BadRequestException('Email is taken')
         }
 
         return this.prisma.user.update({
