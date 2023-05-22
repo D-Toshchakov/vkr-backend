@@ -21,18 +21,15 @@ const createUserAndProducts = async (quantity: number) => {
 
     // create categories
     const categories: { name: string, slug: string }[] = [
+        { name: "electronics", slug: 'electronics' },
         { name: 'industrial', slug: 'industrial' },
         { name: 'games', slug: 'games' },
+        { name: "home", slug: 'home' },
         { name: 'clothing', slug: 'clothing' },
         { name: 'tools', slug: 'tools' },
         { name: 'movies', slug: 'movies' },
-        { name: 'jevelry', slug: 'jevelry' },
-        { name: "garden", slug: 'garden' },
-        { name: "electronics", slug: 'electronics' },
-        { name: "health", slug: 'health' },
-        { name: "home", slug: 'home' },
     ]
-    
+    await prisma.category.createMany({ data: categories })
 
     // create products
     const products: Product[] = []
@@ -51,13 +48,15 @@ const createUserAndProducts = async (quantity: number) => {
                     length: faker.number.int({ min: 2, max: 6 })
                 })
                     .map(() => {
-                        let url = faker.image.urlLoremFlickr({width:640,
-                        height: 480})
+                        let url = faker.image.urlLoremFlickr({
+                            width: 640,
+                            height: 480
+                        })
                         console.log(url);
-                        return url                        
+                        return url
                     }),
                 category: {
-                    create: categories[i]
+                    connect: { name: categories[i % categories.length].name }
                 },
                 reviews: {
                     create: [
