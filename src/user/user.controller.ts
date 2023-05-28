@@ -22,14 +22,16 @@ export class UserController {
         return this.userService.updateProfile(id, dto)
     }
 
-    // @HttpCode(HttpStatus.OK)
-    // @Patch('profile/favorites/:productId')
-    // async toggleFavorite(
-    //     @GetUser("id") id: number,
-    //     @Param('productId', ParseIntPipe) prouctId: number
-    // ) {
-    //     return this.userService.toggleFavorite(id, prouctId)
-    // }
+    @HttpCode(HttpStatus.OK)
+    @Patch('profile/favorites/:productId')
+    async toggleFavorite(
+        @GetUser("id") userId: number,
+        @Param('productId', ParseIntPipe) prouctId: number
+    ) {
+        console.log('toggle req');
+        
+        return this.userService.toggleFavorite(userId, prouctId)
+    }
 
 
     @UseGuards(RolesGuard)

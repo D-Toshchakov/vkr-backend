@@ -3,6 +3,7 @@ import { PrismaService } from 'src/prisma/prisma.service';
 import { FindUserDto, UpdateUserDto, returnUserObject } from './dto/';
 import { Prisma } from '@prisma/client';
 import { hash } from 'argon2';
+import { returnProductObject } from 'src/product/dto';
 
 @Injectable()
 export class UserService {
@@ -19,13 +20,9 @@ export class UserService {
             select: {
                 ...returnUserObject,
                 ...selectObject,
-                favorites: {
+                UserFavorites: {
                     select: {
-                        id: true,
-                        name: true,
-                        price: true,
-                        images: true,
-                        slug: true
+                        product: true
                     },
                 },
                 orders: {
@@ -37,6 +34,7 @@ export class UserService {
                 }
             }
         })
+        
         if (!user) {
             throw new NotFoundException('User not found')
         }
@@ -67,23 +65,26 @@ export class UserService {
 
     }
 
-    async toggleFavorite(id: number, productId: number) {
-        const user = await this.findOne({ id })
+    async toggleFavorite(userId: number, productId: number) {
+        const user = await this.findOne({ id: userId })
 
         if (!user) {
             throw new NotFoundException('User not found')
         }
 
-        const isListed = user.favorites.some(product => product.id === productId)
-
-        await this.prisma.user.update({
-            where: { id },
-            data: {
-                favorites: {
-                    [isListed ? "disconnect" : "connect"]: { id: productId }
-                }
-            }
+        const isListed = await this.prisma.userFavorites.findFirst({
+            where: { userId, productId }
         })
+
+        if (isListed) {
+            const removed = await this.prisma.userFavorites.delete({
+                where: { userId_productId: { userId, productId } }
+            })
+        } else {
+            const favorite = await this.prisma.userFavorites.create({
+                data: { userId, productId }
+            })
+        }
 
         return { message: "Success" }
     }

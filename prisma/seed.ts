@@ -8,18 +8,6 @@ dotenv.config()
 const prisma = new PrismaClient();
 
 const createUserAndProducts = async (quantity: number) => {
-    // create user
-    const pwd = await hash('123123')
-    const user = await prisma.user.create({
-        data: {
-            email: "qwe@mail.ru",
-            hash: pwd,
-            name: faker.person.firstName(),
-            avatarPath: faker.internet.avatar(),
-        }
-    })
-
-    // create categories
     const categories: { name: string, slug: string }[] = [
         { name: "electronics", slug: 'electronics' },
         { name: 'industrial', slug: 'industrial' },
@@ -29,8 +17,23 @@ const createUserAndProducts = async (quantity: number) => {
         { name: 'tools', slug: 'tools' },
         { name: 'movies', slug: 'movies' },
     ]
-    await prisma.category.createMany({ data: categories })
+    // create user
+    let user = await prisma.user.findUnique({ where: { email: 'qwe@mail.ru' } })
+    if (!user) {
+        const pwd = await hash('123123')
+        user = await prisma.user.create({
+            data: {
+                email: "qwe@mail.ru",
+                hash: pwd,
+                name: faker.person.firstName(),
+                avatarPath: faker.internet.avatar(),
+            }
+        })
 
+        // create categories
+        await prisma.category.createMany({ data: categories })
+    }
+    
     // create products
     const products: Product[] = []
 
