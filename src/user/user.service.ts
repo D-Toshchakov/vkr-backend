@@ -28,6 +28,13 @@ export class UserService {
                         slug: true
                     },
                 },
+                orders: {
+                    select: {
+                        items: true,
+                        status: true,
+                        createdAt: true
+                    }
+                }
             }
         })
         if (!user) {

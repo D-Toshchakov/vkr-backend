@@ -1,12 +1,13 @@
 import { Body, Controller, Get, HttpCode, HttpStatus, Param, ParseIntPipe, Post, Put } from '@nestjs/common';
 import { ReviewService } from './review.service';
 import { ReviewDto } from './dto';
-import { GetUser } from 'src/common/decorators';
+import { GetUser, PublicRoute } from 'src/common/decorators';
 
 @Controller('review')
 export class ReviewController {
   constructor(private readonly reviewService: ReviewService) { }
 
+  @PublicRoute()
   @Get('average/:productId')
   async getAverageRating(
     @Param("productId", ParseIntPipe) prodId: number

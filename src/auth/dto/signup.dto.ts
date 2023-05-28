@@ -3,7 +3,6 @@ import { IsEmail, IsNotEmpty, IsOptional, IsPhoneNumber, IsString, MinLength } f
 export class signupDto {
     @IsEmail()
     email: string
-
     
     @MinLength(6, {
         message: 'Password must be at least 6 characters long'

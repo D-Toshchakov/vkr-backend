@@ -113,7 +113,7 @@ export class AuthService {
 
         const [access_token, refresh_token] = await Promise.all([
             this.jwt.signAsync(payload, {
-                expiresIn: '1h',
+                expiresIn: '24h',
                 secret: atSecret,
             }),
             this.jwt.signAsync(payload, {
@@ -122,7 +122,11 @@ export class AuthService {
             }),
         ])
 
-        return { access_token, refresh_token }
+        const access_token_exp = Math.floor(Date.now() / 1000) + 60 * 60 * 24
+
+        console.log(access_token_exp);
+        
+        return { access_token, access_token_exp, refresh_token }
     }
 
     async updateRtHash(userId: number, rt: string) {

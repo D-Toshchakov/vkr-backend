@@ -36,6 +36,7 @@ export class ReviewService {
         if (!avgRating.rating) {
             throw new NotFoundException('Product not found')
         }
+        avgRating.rating = +avgRating.rating.toFixed(1)
 
         return avgRating
     }
