@@ -4,6 +4,8 @@ import { FindUserDto, UpdateUserDto, returnUserObject } from './dto/';
 import { Prisma } from '@prisma/client';
 import { hash } from 'argon2';
 import { returnProductObject } from 'src/product/dto';
+import { returnCategoryObject } from 'src/category/dto';
+import { returnReviewObject } from 'src/review/dto';
 
 @Injectable()
 export class UserService {
@@ -22,7 +24,17 @@ export class UserService {
                 ...selectObject,
                 UserFavorites: {
                     select: {
-                        product: true
+                        product: {
+                            select: {
+                                ...returnProductObject,
+                                category: {
+                                    select: returnCategoryObject
+                                },
+                                reviews: {
+                                    select: returnReviewObject
+                                }
+                            }
+                        }
                     },
                 },
                 orders: {
