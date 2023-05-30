@@ -52,6 +52,7 @@ const createUserAndProducts = async (quantity: number) => {
                 })
                     .map(() => {
                         let url = faker.image.urlLoremFlickr({
+                            // category: 'technics',
                             width: 640,
                             height: 480
                         })
