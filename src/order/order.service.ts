@@ -5,6 +5,7 @@ import { ICreatePayment, YooCheckout } from '@a2seven/yoo-checkout'; // OR const
 import { v4 as uuidv4 } from 'uuid';
 import { BadRequestException } from '@nestjs/common';
 import { PaymentStatusDto } from './dto/paymentStatus.dto';
+import { returnOrderObject } from './dto/returnOrderObject';
 
 const checkout = new YooCheckout({ shopId: process.env.SHOP_ID, secretKey: process.env.PAYMENT_SECRET });
 
@@ -15,7 +16,8 @@ export class OrderService {
 
     async getAll(userId: number) {
         const orders = await this.prisma.order.findMany({
-            where: { id: userId },
+            where: { userId: userId },
+            select: returnOrderObject,
             orderBy: { createdAt: 'desc' }
         })
         return orders
